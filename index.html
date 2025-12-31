@@ -13,7 +13,7 @@
             localStorage.setItem('usuarioId', usuarioId);
         }
         // Cambia la URL por la de tu Azure
-        fetch('https://TU_DOMINIO/api/esperar', {
+        fetch('https://lobster-app-2-qn2wf.ondigitalocean.app/', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ usuarioId })
