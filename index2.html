@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validando...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('fondo.jpg') center center / cover no-repeat;
+    }
+
+    .container {
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .logo img {
+      height: 80px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .gif {
+      margin: 20px 0;
+    }
+
+    .mensaje {
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="logo.png" alt="Logo" />
+    </div>
+    <h2>Espera mientras validamos...</h2>
+    <div class="gif">
+      <img src="cargando.gif" alt="Cargando..." width="80" />
+    </div>
+    <p class="mensaje">no demoramos en validar tu información.
+  </div>
+
+  <script>
+    setTimeout(() => {
+      window.location.href = "index3.html";
+    }, 25000); // 30 segundos
+  </script>
+</body>
+</html>

