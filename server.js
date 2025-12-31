@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const axios = require("axios");
 
 const TELEGRAM_TOKEN = "6128304583:AAEhQuGABUp5YzB_aK-Q-L6u-UAYOHI29F0";
-const ADMIN_CHAT_ID = "<a href="tel:6287904726">6287904726</a>";
+const ADMIN_CHAT_ID = "6287904726";
 
 const app = express();
 app.use(cors());
